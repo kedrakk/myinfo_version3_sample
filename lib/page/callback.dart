@@ -20,6 +20,7 @@ class CallBackPage extends StatefulWidget {
 
 class _CallBackPageState extends State<CallBackPage> {
   String bToken = "";
+  String personData = "";
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -44,8 +45,34 @@ class _CallBackPageState extends State<CallBackPage> {
       if (context.mounted) {
         closeDialog(context);
       }
-      bToken = res;
+      _getPersonData(res);
+    } catch (e) {
+      if (context.mounted) {
+        closeDialog(context);
+      }
+      showErrorMessage(
+        context: context,
+        message: e.toString(),
+      );
+    }
+  }
+
+  _getPersonData(String token) async {
+    setState(() {
+      bToken = token;
+    });
+    try {
+      showLoadingDialog(context);
+      personData = await MyInfoController(
+        networkHelper: networkHelper,
+      ).getPersonData(
+        code: widget.code,
+        token: token,
+      );
       setState(() {});
+      if (context.mounted) {
+        closeDialog(context);
+      }
     } catch (e) {
       if (context.mounted) {
         closeDialog(context);
@@ -83,6 +110,13 @@ class _CallBackPageState extends State<CallBackPage> {
             if (bToken.isNotEmpty)
               Text(
                 "Bearer Token: $bToken",
+              ),
+            const SizedBox(
+              height: 15,
+            ),
+            if (personData.isNotEmpty)
+              Text(
+                "Person Data: $personData",
               ),
             const SizedBox(
               height: 15,

@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter/services.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 import 'package:myinfo_v3_sample_webapp/network/exception_helper.dart';
 
 import '../data/const_myinfo.dart';
@@ -11,6 +12,11 @@ class MyInfoHelper {
   String generateState() {
     var res = Random.secure().nextInt(999999) + 1000000;
     return res.toString();
+  }
+
+  String getSubFromToken(String bToken) {
+    Map<String, dynamic> payload = Jwt.parseJwt(bToken);
+    return payload['sub'];
   }
 
   Future<Map<String, String>> generateRS256Header(

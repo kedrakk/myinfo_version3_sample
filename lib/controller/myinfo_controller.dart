@@ -49,4 +49,32 @@ class MyInfoController {
       rethrow;
     }
   }
+
+  Future<String> getPersonData({
+    required String code,
+    required String token,
+  }) async {
+    try {
+      var sub = MyInfoHelper().getSubFromToken(token);
+      var url = "${MyInfoConsts.baseURL}/person/$sub/";
+      var headers = await MyInfoHelper().generateRS256Header(
+        code,
+        url,
+        MyInfoConsts.clientId,
+        MyInfoConsts.clientSecret,
+        isPerson: true,
+        bearerForPerson: token,
+      );
+      return await networkHelper.getPersonData(
+        clientId: MyInfoConsts.clientId,
+        code: code,
+        headers: headers,
+        attributes: MyInfoConsts.attributes,
+        authorizationToken: token,
+        sub: sub,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
 }

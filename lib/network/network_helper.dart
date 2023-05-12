@@ -21,7 +21,14 @@ abstract class INetworkHelper {
     required String redirectURL,
     required Map<String, String> headers,
   });
-  Future<String> getPersonData();
+  Future<String> getPersonData({
+    required String sub,
+    required String attributes,
+    required String clientId,
+    required String authorizationToken,
+    required String code,
+    required Map<String, String> headers,
+  });
 }
 
 class NetworkHelper implements INetworkHelper {
@@ -87,8 +94,27 @@ class NetworkHelper implements INetworkHelper {
   }
 
   @override
-  Future<String> getPersonData() {
-    // TODO: implement getPersonData
-    throw UnimplementedError();
+  Future<String> getPersonData({
+    required String sub,
+    required String attributes,
+    required String clientId,
+    required String authorizationToken,
+    required String code,
+    required Map<String, String> headers,
+  }) async {
+    try {
+      var url = "${MyInfoConsts.baseURL}/person/$sub/";
+      url += "?attributes=$attributes&client_id=$clientId";
+      var response = await http.get(
+        Uri.parse(url),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        return response.body.toString();
+      }
+      throw AppException(message: "Cannot retrieve person data");
+    } catch (e) {
+      throw AppException(message: e.toString());
+    }
   }
 }
