@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../controller/myinfo_controller.dart';
 import '../di/di_helper.dart';
+import '../route/routes.dart';
 import '../util/dialog.dart';
 
 class CallBackPage extends StatefulWidget {
@@ -21,6 +23,7 @@ class CallBackPage extends StatefulWidget {
 class _CallBackPageState extends State<CallBackPage> {
   String bToken = "";
   String personData = "";
+  String decryptedPersonData = "";
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -73,6 +76,30 @@ class _CallBackPageState extends State<CallBackPage> {
       if (context.mounted) {
         closeDialog(context);
       }
+      _decryptData();
+    } catch (e) {
+      if (context.mounted) {
+        closeDialog(context);
+      }
+      showErrorMessage(
+        context: context,
+        message: e.toString(),
+      );
+    }
+  }
+
+  _decryptData() async {
+    try {
+      showLoadingDialog(context);
+      decryptedPersonData = await MyInfoController(
+        networkHelper: networkHelper,
+      ).decryptData(
+        personData,
+      );
+      setState(() {});
+      if (context.mounted) {
+        closeDialog(context);
+      }
     } catch (e) {
       if (context.mounted) {
         closeDialog(context);
@@ -90,6 +117,16 @@ class _CallBackPageState extends State<CallBackPage> {
       body: Center(
         child: Column(
           children: [
+            ElevatedButton(
+              onPressed: () {
+                context.pushReplacementNamed(
+                  Routes.home,
+                );
+              },
+              child: const Text(
+                "Back To Home",
+              ),
+            ),
             const SizedBox(
               height: 15,
             ),
@@ -117,6 +154,13 @@ class _CallBackPageState extends State<CallBackPage> {
             if (personData.isNotEmpty)
               Text(
                 "Person Data: $personData",
+              ),
+            const SizedBox(
+              height: 15,
+            ),
+            if (decryptedPersonData.isNotEmpty)
+              Text(
+                "Person Data Decrypted: $decryptedPersonData",
               ),
             const SizedBox(
               height: 15,

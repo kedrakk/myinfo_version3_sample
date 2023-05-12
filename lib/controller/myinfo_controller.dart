@@ -1,3 +1,4 @@
+import 'package:myinfo_v3_sample_webapp/helper/decrypt_helper.dart';
 import 'package:myinfo_v3_sample_webapp/network/network_helper.dart';
 
 import '../data/const_myinfo.dart';
@@ -73,6 +74,14 @@ class MyInfoController {
         authorizationToken: token,
         sub: sub,
       );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<String> decryptData(String encoded) async {
+    try {
+      return await DecryptHelper().decryptPayload(encoded);
     } catch (_) {
       rethrow;
     }
