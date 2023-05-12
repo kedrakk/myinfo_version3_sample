@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:myinfo_v3_sample_webapp/data/const_assets.dart';
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
