@@ -1,25 +1,49 @@
 import 'package:myinfo_v3_sample_webapp/network/network_helper.dart';
 
+import '../data/const_myinfo.dart';
+import '../helper/myinfo_helper.dart';
+
 class MyInfoController {
   final INetworkHelper networkHelper;
   MyInfoController({
     required this.networkHelper,
   });
 
-  Future<String> authorise({
-    required String clientId,
-    required String purpose,
+  Future<String> authorise() async {
+    try {
+      var state = MyInfoHelper().generateState();
+      return await networkHelper.authorise(
+        clientId: MyInfoConsts.clientId,
+        purpose: MyInfoConsts.purpose,
+        state: state,
+        redirectURL: MyInfoConsts.redirectURL,
+        attributes: MyInfoConsts.attributes,
+      );
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<String> getToken({
+    required String code,
     required String state,
-    required String redirectURL,
-    required String attributes,
   }) async {
     try {
-      return await networkHelper.authorise(
-        clientId: clientId,
-        purpose: purpose,
+      var url = "${MyInfoConsts.baseURL}/token";
+      var headers = await MyInfoHelper().generateRS256Header(
+        code,
+        url,
+        MyInfoConsts.clientId,
+        MyInfoConsts.clientSecret,
+        isPerson: false,
+      );
+      return await networkHelper.getToken(
+        clientId: MyInfoConsts.clientId,
+        clientSecret: MyInfoConsts.clientSecret,
+        code: code,
         state: state,
-        redirectURL: redirectURL,
-        attributes: attributes,
+        redirectURL: MyInfoConsts.redirectURL,
+        headers: headers,
       );
     } catch (_) {
       rethrow;
