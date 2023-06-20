@@ -137,27 +137,6 @@ class _CallBackPageState extends State<CallBackPage> {
             const SizedBox(
               height: 15,
             ),
-            if (widget.state.isNotEmpty && widget.code.isNotEmpty)
-              Text(
-                "State: ${widget.state}, Code: ${widget.code}",
-              ),
-            const SizedBox(
-              height: 15,
-            ),
-            if (bToken.isNotEmpty)
-              Text(
-                "Bearer Token: $bToken",
-              ),
-            const SizedBox(
-              height: 15,
-            ),
-            if (personData.isNotEmpty)
-              Text(
-                "Person Data: $personData",
-              ),
-            const SizedBox(
-              height: 15,
-            ),
             if (decryptedPersonData.isNotEmpty)
               Text(
                 "Person Data Decrypted: $decryptedPersonData",
